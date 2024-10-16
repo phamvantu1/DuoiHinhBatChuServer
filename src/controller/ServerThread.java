@@ -118,6 +118,8 @@ public class ServerThread implements Runnable {
                         this.user = user1;
                         userDAO.updateToOnline(this.user.getID());
                         Server.serverThreadBus.boardCast(clientNumber, "chat-server," + user1.getNickname() + " đang online");
+                           // Cập nhật danh sách người dùng online
+                        Server.serverThreadBus.broadcastOnlineUsers();
                         Server.admin.addMessage("[" + user1.getID() + "] " + user1.getNickname() + " đang online");
                     } else if (!userDAO.checkIsBanned(user1)) {
                         write("dupplicate-login," + messageSplit[1] + "," + messageSplit[2]);

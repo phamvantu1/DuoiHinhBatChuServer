@@ -44,7 +44,7 @@ public class Server {
                 TimeUnit.SECONDS,
                 new ArrayBlockingQueue<>(8)
         );
-//        admin = new Admin();
+        admin = new Admin();
 //        admin.run();
         try {
             while (true) {
