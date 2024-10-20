@@ -93,9 +93,15 @@ public class ServerThreadBus {
         StringBuilder message = new StringBuilder("online-users,");
 
         for (User user : onlineUsers) {
-            message.append(user.getAvatar()).append(":").append(user.getNickname()).append(";");
-            System.out.println("xin chao caac ban serthreas" + user.getAvatar());
-            System.out.println( "toi day ne + " + user);
+            message.append(user.getAvatar()).append(":").
+                    append(user.getNickname()).append(":").
+                    append(user.getUsername()).append(":").
+                    append(user.getNumberOfGame()).append(":").
+                    append(user.getNumberOfWin()).append(":").
+                    append(user.getNumberOfDraw()).append(":").
+                    append(user.getRank()).
+                    append(";");
+           
         }
 
         for (ServerThread serverThread : listServerThreads) {
