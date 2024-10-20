@@ -170,21 +170,26 @@ public class UserDAO extends DAO {
 
     public List<User> getListFriend(int ID) {
         List<User> ListFriend = new ArrayList<>();
+        String sql = "SELECT ID, NickName, IsOnline, IsPlaying\n"
+                + "FROM user\n"
+                + "WHERE \n"
+                + "    ID IN (\n"
+                + "        SELECT ID_User1\n"
+                + "        FROM friend\n"
+                + "        WHERE ID_User2 = ?\n"
+                + "    )\n"
+                + "    OR ID IN (\n"
+                + "        SELECT ID_User2\n"
+                + "        FROM friend\n"
+                + "        WHERE ID_User1 = ?\n"
+                + "    )";
         try {
-            PreparedStatement preparedStatement = con.prepareStatement("SELECT User.ID, User.NickName, User.IsOnline, User.IsPlaying\n"
-                    + "FROM user\n"
-                    + "WHERE User.ID IN (\n"
-                    + "	SELECT ID_User1\n"
-                    + "    FROM friend\n"
-                    + "    WHERE ID_User2 = ?\n"
-                    + ")\n"
-                    + "OR User.ID IN(\n"
-                    + "	SELECT ID_User2\n"
-                    + "    FROM friend\n"
-                    + "    WHERE ID_User1 = ?\n"
-                    + ")");
+            PreparedStatement preparedStatement = con.prepareStatement(sql);
+
+            // Set giá trị cho hai dấu ? (cả hai là ID)
             preparedStatement.setInt(1, ID);
             preparedStatement.setInt(2, ID);
+
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
                 ListFriend.add(new User(rs.getInt(1),
@@ -195,12 +200,15 @@ public class UserDAO extends DAO {
             ListFriend.sort(new Comparator<User>() {
                 @Override
                 public int compare(User o1, User o2) {
-                    if (o1.getIsOnline() && !o2.getIsOnline())
+                    if (o1.getIsOnline() && !o2.getIsOnline()) {
                         return -1;
-                    if (o1.getIsPlaying() && !o2.getIsOnline())
+                    }
+                    if (o1.getIsPlaying() && !o2.getIsOnline()) {
                         return -1;
-                    if (!o1.getIsPlaying() && o1.getIsOnline() && o2.getIsPlaying() && o2.getIsOnline())
+                    }
+                    if (!o1.getIsPlaying() && o1.getIsOnline() && o2.getIsPlaying() && o2.getIsOnline()) {
                         return -1;
+                    }
                     return 0;
                 }
 
@@ -234,8 +242,8 @@ public class UserDAO extends DAO {
 
     public void addFriendShip(int ID1, int ID2) {
         try {
-            PreparedStatement preparedStatement = con.prepareStatement("INSERT INTO friend(ID_User1, ID_User2)\n" +
-                    "VALUES (?,?)");
+            PreparedStatement preparedStatement = con.prepareStatement("INSERT INTO friend(ID_User1, ID_User2)\n"
+                    + "VALUES (?,?)");
             preparedStatement.setInt(1, ID1);
             preparedStatement.setInt(2, ID2);
             System.out.println(preparedStatement);
@@ -247,9 +255,9 @@ public class UserDAO extends DAO {
 
     public void removeFriendship(int ID1, int ID2) {
         try {
-            PreparedStatement preparedStatement = con.prepareStatement("DELETE FROM friend\n" +
-                    "WHERE (ID_User1 = ? AND ID_User2 = ?)\n" +
-                    "OR(ID_User1 = ? AND ID_User2 = ?)");
+            PreparedStatement preparedStatement = con.prepareStatement("DELETE FROM friend\n"
+                    + "WHERE (ID_User1 = ? AND ID_User2 = ?)\n"
+                    + "OR(ID_User1 = ? AND ID_User2 = ?)");
             preparedStatement.setInt(1, ID1);
             preparedStatement.setInt(2, ID2);
             preparedStatement.setInt(3, ID2);
@@ -269,8 +277,9 @@ public class UserDAO extends DAO {
                     + "ORDER BY (user.NumberOfGame+user.numberOfDraw*5+user.NumberOfWin*10) DESC");
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
-                if (rs.getInt(1) == ID)
+                if (rs.getInt(1) == ID) {
                     return rank;
+                }
                 rank++;
             }
 

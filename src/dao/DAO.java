@@ -15,11 +15,11 @@ public class DAO {
     protected Connection con;
 
     public DAO() {
-        final String DATABASE_NAME = "ltm"; // TODO FILL YOUR DATABASE NAME
+        final String DATABASE_NAME = "caronhom5"; // TODO FILL YOUR DATABASE NAME
 //        final String jdbcURL = "jdbc:mysql://localhost:3306/" + DATABASE_NAME + "?useSSL=false";
         final String jdbcURL = "jdbc:mysql://localhost:3306/" + DATABASE_NAME + "?useSSL=false&allowPublicKeyRetrieval=true"; // Updated URL
         final String JDBC_USER = "root";  // TODO FILL YOUR DATABASE USER
-        final String JDBC_PASSWORD = "123456"; // TODO FILL YOUR DATABASE PASSWORD
+        final String JDBC_PASSWORD = "root"; // TODO FILL YOUR DATABASE PASSWORD
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             con = DriverManager.getConnection(jdbcURL, JDBC_USER, JDBC_PASSWORD);
