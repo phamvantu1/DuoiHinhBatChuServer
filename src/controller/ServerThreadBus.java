@@ -133,38 +133,66 @@ public class ServerThreadBus {
     }
 
 
-    // Method to check the winner based on correct answers
-    public void checkWinner() {
-        ServerThread winner = null;
-        for (ServerThread thread : listServerThreads) {
-            if (winner == null || thread.getCorrectAnswers() > winner.getCorrectAnswers()) {
-                winner = thread;
-                
-            }
-           
+
+private void checkWinner() {
+    ServerThread winner = null;
+    List<ServerThread> tiedPlayers = new ArrayList<>(); // Danh sách người chơi hòa
+    int maxCorrectAnswers = -1;
+
+    // Duyệt qua danh sách người chơi để tìm người thắng và tình trạng hòa
+    for (ServerThread thread : listServerThreads) {
+        int correctAnswers = thread.getCorrectAnswers();
+
+        if (correctAnswers > maxCorrectAnswers) {
+            // Cập nhật người thắng mới với điểm cao nhất
+            maxCorrectAnswers = correctAnswers;
+            winner = thread;
+
+            // Xóa danh sách người hòa và thêm người thắng mới vào
+            tiedPlayers.clear();
+            tiedPlayers.add(winner);
+        } else if (correctAnswers == maxCorrectAnswers) {
+            // Thêm người chơi vào danh sách hòa nếu điểm bằng nhau
+            tiedPlayers.add(thread);
         }
-        notifyClients(winner);
     }
 
+    // Nếu có nhiều người chơi với số câu đúng bằng nhau, không có người thắng
+    if (tiedPlayers.size() > 1) {
+        winner = null; // Không có người thắng duy nhất
+    }
 
-        private void notifyClients(ServerThread winner) {
-        for (ServerThread thread : listServerThreads) {
-            try {
-                if (thread == winner) {
-                    thread.write("user-winer," + winner.getClientNumber()  );
-                    System.out.println("gui thong bao thang den client : " + winner.getClientNumber());
-                } else {
-                    thread.write("user-loser," + winner.getClientNumber());
-                    System.out.println("gui thong bao thua den client: " + thread.getClientNumber());
-                }
-            } catch (IOException e) {
-                System.err.println("loi khi gui thong bao client: " + thread.getClientNumber());
-                e.printStackTrace();
+    // Gọi notifyClients để gửi thông báo
+    notifyClients(winner, tiedPlayers);
+}
+
+private void notifyClients(ServerThread winner, List<ServerThread> tiedPlayers) {
+    for (ServerThread thread : listServerThreads) {
+        try {
+            if (tiedPlayers.contains(thread) && winner == null) {
+                // Gửi thông báo hòa nếu không có người thắng duy nhất
+                thread.write("user-tie," + thread.getClientNumber());
+                System.out.println("Gửi thông báo hòa đến client: " + thread.getClientNumber());
+            } else if (winner != null && thread == winner) {
+                // Gửi thông báo thắng nếu có người thắng duy nhất
+                thread.write("user-winner," + winner.getClientNumber());
+                System.out.println("Gửi thông báo thắng đến client: " + winner.getClientNumber());
+            } else {
+                // Gửi thông báo thua cho những người còn lại
+                thread.write("user-loser," + (winner != null ? winner.getClientNumber() : "N/A"));
+                System.out.println("Gửi thông báo thua đến client: " + thread.getClientNumber());
             }
+        } catch (IOException e) {
+            System.err.println("Lỗi khi gửi thông báo đến client: " + thread.getClientNumber());
+            e.printStackTrace();
         }
-         for (ServerThread thread : listServerThreads) {
+    }
+
+    // Reset correctAnswers cho tất cả các client về -1 sau khi gửi thông báo
+    for (ServerThread thread : listServerThreads) {
         thread.resetCorrectAnswers();
     }
-        }
+}
+
 
 }
