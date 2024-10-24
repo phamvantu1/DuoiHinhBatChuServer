@@ -37,15 +37,24 @@ public class Server {
             e.printStackTrace();
             System.exit(1);
         }
+//        ThreadPoolExecutor executor = new ThreadPoolExecutor(
+//                10,
+//                100,
+//                10,
+//                TimeUnit.SECONDS,
+//                new ArrayBlockingQueue<>(8)
+//        );
+
         ThreadPoolExecutor executor = new ThreadPoolExecutor(
-                10,
-                100,
-                10,
-                TimeUnit.SECONDS,
-                new ArrayBlockingQueue<>(8)
-        );
+        10,  // Số thread tối thiểu (core pool size)
+        100, // Số thread tối đa
+        10,  // Thời gian chờ trước khi hủy thread dư thừa
+        TimeUnit.SECONDS,
+        new ArrayBlockingQueue<>(8),  // Hàng đợi các task đang chờ
+        new ThreadPoolExecutor.CallerRunsPolicy() // Đảm bảo không bỏ sót task nếu quá tải
+);
+
         admin = new Admin();
-//        admin.run();
         try {
             while (true) {
                 socketOfServer = listener.accept();

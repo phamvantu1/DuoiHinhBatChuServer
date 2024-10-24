@@ -113,20 +113,25 @@ public class ServerThreadBus {
         }
     }
 
-   public void checkAllPlayersReady() {
-        boolean allReady = true;
+    
+    public void checkAllPlayersReady() {
+        int countReady = 0;
+
+        // Đếm số người chơi đã gửi đáp án
         for (ServerThread thread : listServerThreads) {
-            if (thread.getCorrectAnswers() == -1) {
-                allReady = false;
-                break;
+            if (thread.getCorrectAnswers() != -1) {
+                System.out.println("thread.getCorrectAnswers():  " + thread.getCorrectAnswers() );
+                countReady++;
             }
         }
-        System.out.println("da gui het");
-        if (allReady) {
+
+        // Nếu tất cả người chơi đã gửi đáp án, kiểm tra người thắng
+        if (countReady == listServerThreads.size()) {
             checkWinner();
-            System.out.println("da gui het l2");
+            System.out.println("so nguoi choi " + listServerThreads.size() );
         }
     }
+
 
     // Method to check the winner based on correct answers
     public void checkWinner() {
@@ -134,45 +139,32 @@ public class ServerThreadBus {
         for (ServerThread thread : listServerThreads) {
             if (winner == null || thread.getCorrectAnswers() > winner.getCorrectAnswers()) {
                 winner = thread;
-                System.out.println("win1");
+                
             }
-            System.out.println("win2");
+           
         }
         notifyClients(winner);
     }
 
 
-    // Method to notify clients of the result
-//    private void notifyClients(ServerThread winner) {
-//        for (ServerThread thread : listServerThreads) {
-//            try {
-//                if (thread == winner) {
-//                    thread.write("result,You are the winner!");
-//                    System.out.println("result,You are the winner!");
-//                } else {
-//                    thread.write("result,You lost. The winner is client " + winner.getClientNumber());
-//                    System.out.println("result,You lost. The winner is client");
-//                }
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
-    private void notifyClients(ServerThread winner) {
-    for (ServerThread thread : listServerThreads) {
-        try {
-            if (thread == winner) {
-                thread.write("user-win,");
-                System.out.println("gui thong bao thang den client : " + winner.getClientNumber());
-            } else {
-                thread.write("result,You lost. The winner is client " + winner.getClientNumber());
-                System.out.println("gui thong bao thua den client: " + thread.getClientNumber());
+        private void notifyClients(ServerThread winner) {
+        for (ServerThread thread : listServerThreads) {
+            try {
+                if (thread == winner) {
+                    thread.write("user-winer," + winner.getClientNumber()  );
+                    System.out.println("gui thong bao thang den client : " + winner.getClientNumber());
+                } else {
+                    thread.write("user-loser," + winner.getClientNumber());
+                    System.out.println("gui thong bao thua den client: " + thread.getClientNumber());
+                }
+            } catch (IOException e) {
+                System.err.println("loi khi gui thong bao client: " + thread.getClientNumber());
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            System.err.println("loi khi gui thong bao client: " + thread.getClientNumber());
-            e.printStackTrace();
         }
+         for (ServerThread thread : listServerThreads) {
+        thread.resetCorrectAnswers();
     }
-    }
+        }
 
 }

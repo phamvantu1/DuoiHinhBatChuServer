@@ -26,7 +26,8 @@ public class ServerThread implements Runnable {
     private Room room;
     private final UserDAO userDAO;
     private final String clientIP;
-    private int correctAnswers;
+    private int correctAnswers = -1;
+
 
     public ServerThread(Socket socketOfServer, int clientNumber) {
         this.socketOfServer = socketOfServer;
@@ -85,6 +86,19 @@ public class ServerThread implements Runnable {
         this.correctAnswers = correctAnswers;
     }
 
+    
+    
+    public void updateCorrectAnswers(int correctAnswers) {
+    this.correctAnswers = correctAnswers; // Cập nhật số câu trả lời đúng
+    }
+    
+    
+    public void resetCorrectAnswers() {
+        this.correctAnswers = -1; // Reset số câu trả lời đúng về -1
+    }
+
+    
+    
     public String getStringFromUser(User user1) {
         return user1.getID() + "," + user1.getUsername()
                 + "," + user1.getPassword() + "," + user1.getNickname() + "," +
@@ -140,9 +154,13 @@ public class ServerThread implements Runnable {
 
                 // Handle correct answers
                 if (messageSplit[0].equals("correct-answers")) {
-                    System.out.println("server nhan " + "correct-answers");
-                    correctAnswers = Integer.parseInt(messageSplit[1]);
-                    setCorrectAnswers(correctAnswers);
+                    
+//                    correctAnswers = Integer.parseInt(messageSplit[1]);
+//                    System.out.println("server nhan " + correctAnswers );
+//                    setCorrectAnswers(correctAnswers);
+                    int correctAnswers = Integer.parseInt(messageSplit[1]);
+                    this.updateCorrectAnswers(correctAnswers); 
+                    System.out.println("server nhan " + correctAnswers );
                     Server.serverThreadBus.checkAllPlayersReady();
 
                 }
@@ -276,6 +294,7 @@ public class ServerThread implements Runnable {
                         System.out.println("Không tìm thấy phòng, tạo phòng mới");
                     }
                 }
+                
                 //Xử lý không tìm được phòng
                 if (messageSplit[0].equals("cancel-room")) {
                     userDAO.updateToNotPlaying(this.user.getID());
