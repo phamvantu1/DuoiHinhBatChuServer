@@ -26,6 +26,7 @@ public class ServerThread implements Runnable {
     private Room room;
     private final UserDAO userDAO;
     private final String clientIP;
+    private int correctAnswers;
 
     public ServerThread(Socket socketOfServer, int clientNumber) {
         this.socketOfServer = socketOfServer;
@@ -73,6 +74,15 @@ public class ServerThread implements Runnable {
 
     public String getClientIP() {
         return clientIP;
+    }
+
+
+    public int getCorrectAnswers() {
+        return correctAnswers;
+    }
+
+    public void setCorrectAnswers(int correctAnswers) {
+        this.correctAnswers = correctAnswers;
     }
 
     public String getStringFromUser(User user1) {
@@ -127,6 +137,17 @@ public class ServerThread implements Runnable {
                         write("banned-user," + messageSplit[1] + "," + messageSplit[2]);
                     }
                 }
+
+                // Handle correct answers
+                if (messageSplit[0].equals("correct-answers")) {
+                    System.out.println("server nhan " + "correct-answers");
+                    correctAnswers = Integer.parseInt(messageSplit[1]);
+                    setCorrectAnswers(correctAnswers);
+                    Server.serverThreadBus.checkAllPlayersReady();
+
+                }
+
+
                 //Xử lý đăng kí
                 if (messageSplit[0].equals("register")) {
                     boolean checkdup = userDAO.checkDuplicated(messageSplit[1]);
