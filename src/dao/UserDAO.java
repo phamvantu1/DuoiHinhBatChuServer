@@ -44,7 +44,8 @@ public class UserDAO extends DAO {
                         rs.getInt(8),
                         (rs.getInt(9) != 0),
                         (rs.getInt(10) != 0),
-                        getRank(rs.getInt(1)));
+                        getRank(rs.getInt(1)),
+                        getScore(rs.getInt(1)));
             }
 
         } catch (SQLException e) {
@@ -381,6 +382,86 @@ public class UserDAO extends DAO {
             ex.printStackTrace();
         }
     }
+    
+
+            public void addScoreWin(int ID) {
+            try {
+                // Lấy điểm hiện tại của user từ database
+                double currentScore = new UserDAO().getScore(ID);  
+
+                // Tăng điểm thêm 1
+                double newScore = currentScore + 2.0;
+
+                // Chuẩn bị câu lệnh SQL để cập nhật
+                PreparedStatement preparedStatement = con.prepareStatement(
+                    "UPDATE user SET user.Score = ? WHERE user.ID = ?"
+                );
+
+                // Gán giá trị mới vào câu lệnh SQL
+                preparedStatement.setDouble(1, newScore);
+                preparedStatement.setInt(2, ID);
+
+                // In ra câu lệnh để kiểm tra (tùy chọn)
+                System.out.println(preparedStatement);
+
+                // Thực thi cập nhật
+                preparedStatement.executeUpdate();
+            } catch (SQLException ex) {
+                ex.printStackTrace();  // In lỗi nếu có
+            }
+        }
+
+    public void addScoreDraw(int ID) {
+        try {
+            // Lấy điểm hiện tại của user từ database
+            double currentScore = new UserDAO().getScore(ID);
+
+            // Tăng điểm thêm 1
+            double newScore = currentScore + 1.0;
+
+            // Chuẩn bị câu lệnh SQL để cập nhật
+            PreparedStatement preparedStatement = con.prepareStatement(
+                    "UPDATE user SET user.Score = ? WHERE user.ID = ?"
+            );
+
+            // Gán giá trị mới vào câu lệnh SQL
+            preparedStatement.setDouble(1, newScore);
+            preparedStatement.setInt(2, ID);
+
+            // In ra câu lệnh để kiểm tra (tùy chọn)
+            System.out.println(preparedStatement);
+
+            // Thực thi cập nhật
+            preparedStatement.executeUpdate();
+        } catch (SQLException ex) {
+            ex.printStackTrace();  // In lỗi nếu có
+        }
+    }
+
+
+            public double getScore(int ID) {
+            try {
+                // Chuẩn bị câu truy vấn SQL
+                PreparedStatement preparedStatement = con.prepareStatement(
+                    "SELECT user.Score FROM user WHERE user.ID = ?"
+                );
+
+                // Gán giá trị ID vào câu truy vấn
+                preparedStatement.setInt(1, ID);
+
+                // Thực thi truy vấn
+                ResultSet rs = preparedStatement.executeQuery();
+
+                // Kiểm tra và lấy giá trị nếu tồn tại
+                if (rs.next()) {
+                    return rs.getDouble(1);  // Lấy giá trị kiểu double từ cột Score
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();  // In ra lỗi nếu có
+            }
+            return -1.0;  // Trả về -1.0 nếu có lỗi hoặc không tìm thấy
+        }
+
 
     public int getNumberOfGame(int ID) {
         try {

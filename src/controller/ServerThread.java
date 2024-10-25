@@ -103,7 +103,7 @@ public class ServerThread implements Runnable {
         return user1.getID() + "," + user1.getUsername()
                 + "," + user1.getPassword() + "," + user1.getNickname() + "," +
                 user1.getAvatar() + "," + user1.getNumberOfGame() + "," +
-                user1.getNumberOfWin() + "," + user1.getNumberOfDraw() + "," + user1.getRank();
+                user1.getNumberOfWin() + "," + user1.getNumberOfDraw() + "," + user1.getRank()  + "," + user1.getScore();
     }
 
     public void goToOwnRoom() throws IOException {
@@ -139,6 +139,7 @@ public class ServerThread implements Runnable {
                         write("wrong-user," + messageSplit[1] + "," + messageSplit[2]);
                     else if (!user1.getIsOnline() && !userDAO.checkIsBanned(user1)) {
                         write("login-success," + getStringFromUser(user1));
+
                         this.user = user1;
                         userDAO.updateToOnline(this.user.getID());
                         Server.serverThreadBus.boardCast(clientNumber, "chat-server," + user1.getNickname() + " đang online");
@@ -152,12 +153,13 @@ public class ServerThread implements Runnable {
                     }
                 }
 
+                if (messageSplit[0].equals("check-onlien")) {
+                    Server.serverThreadBus.broadcastOnlineUsers();
+                }
+
                 // Handle correct answers
                 if (messageSplit[0].equals("correct-answers")) {
-                    
-//                    correctAnswers = Integer.parseInt(messageSplit[1]);
-//                    System.out.println("server nhan " + correctAnswers );
-//                    setCorrectAnswers(correctAnswers);
+
                     int correctAnswers = Integer.parseInt(messageSplit[1]);
                     this.updateCorrectAnswers(correctAnswers); 
                     System.out.println("server nhan " + correctAnswers );
@@ -355,16 +357,28 @@ public class ServerThread implements Runnable {
                 }
                 if (messageSplit[0].equals("win")) {
                     userDAO.addWinGame(this.user.getID());
+                    userDAO.addScoreWin(this.user.getID());
+                    System.out.println("nguoi thang la nguoi co id" + this.user.getID());
                     room.increaseNumberOfGame();
-                    room.getCompetitor(clientNumber).write("caro," + messageSplit[1] + "," + messageSplit[2]);
+
                     room.boardCast("new-game,");
                 }
-                if (messageSplit[0].equals("lose")) {
-                    userDAO.addWinGame(room.getCompetitor(clientNumber).user.getID());
+                
+                   if (messageSplit[0].equals("tie")) {
+                       System.out.println("nguoi hoa la nguoi co id" + this.user.getID());
+                    room.increaseNumberOfDraw();
                     room.increaseNumberOfGame();
-                    room.getCompetitor(clientNumber).write("competitor-time-out");
-                    write("new-game,");
+                    room.DrawOfGame();
+
+                    room.boardCast("new-game,");
                 }
+                
+//                if (messageSplit[0].equals("lose")) {
+//                    userDAO.addWinGame(room.getCompetitor(clientNumber).user.getID());
+//                    room.increaseNumberOfGame();
+//                    room.getCompetitor(clientNumber).write("competitor-time-out");
+//                    write("new-game,");
+//                }
                 if (messageSplit[0].equals("draw-request")) {
                     room.getCompetitor(clientNumber).write(message);
                 }

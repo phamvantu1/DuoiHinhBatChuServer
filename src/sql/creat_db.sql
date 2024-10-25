@@ -8,7 +8,8 @@ CREATE TABLE `user`(
     numberOfWin int DEFAULT 0,
     numberOfDraw int DEFAULT 0,
     IsOnline int DEFAULT 0,
-    IsPlaying int DEFAULT 0
+    IsPlaying int DEFAULT 0,
+    score double DEFAULT 0
 );
 CREATE TABLE friend(
     ID_User1 int NOT NULL,

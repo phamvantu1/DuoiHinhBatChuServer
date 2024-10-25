@@ -99,7 +99,8 @@ public class ServerThreadBus {
                     append(user.getNumberOfGame()).append(":").
                     append(user.getNumberOfWin()).append(":").
                     append(user.getNumberOfDraw()).append(":").
-                    append(user.getRank()).
+                    append(user.getRank()).append(":").
+                    append(user.getScore()).
                     append(";");
            
         }

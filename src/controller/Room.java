@@ -96,6 +96,12 @@ public class Room {
         userDAO.addGame(user1.getUser().getID());
         userDAO.addGame(user2.getUser().getID());
     }
+    
+     public void DrawOfGame() {
+        userDAO.addScoreDraw(user1.getUser().getID());
+        userDAO.addScoreDraw(user2.getUser().getID());
+    }
+    
 
     public void increaseNumberOfDraw() {
         userDAO.addDrawGame(user1.getUser().getID());

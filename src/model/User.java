@@ -20,10 +20,25 @@ public class User {
     private boolean isOnline;
     private boolean isPlaying;
     private int rank;
+    private double score;
 
     public User() {
     }
 
+    public User(int ID, String username, String password, String nickname, String avatar, int numberOfGame, int numberOfwin, int numberOfDraw, boolean isOnline, boolean isPlaying, int rank, double score) {
+        this.ID = ID;
+        this.username = username;
+        this.password = password;
+        this.nickname = nickname;
+        this.avatar = avatar;
+        this.numberOfGame = numberOfGame;
+        this.numberOfWin = numberOfwin;
+        this.numberOfDraw = numberOfDraw;
+        this.isOnline = isOnline;
+        this.isPlaying = isPlaying;
+        this.rank = rank;
+        this.score = score;
+    }
     public User(int ID, String username, String password, String nickname, String avatar, int numberOfGame, int numberOfwin, int numberOfDraw, boolean isOnline, boolean isPlaying, int rank) {
         this.ID = ID;
         this.username = username;
@@ -58,6 +73,15 @@ public class User {
         this.avatar = avatar;
     }
 
+    public double getScore(){
+        return score;
+    }
+    
+    public void setScore(double score )
+    {
+        this.score = score;
+    }
+    
     public int getRank() {
         return rank;
     }
