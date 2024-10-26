@@ -111,12 +111,31 @@ public class Room {
     }
 
     public void HistoryWin(int winnerID) {
-        historyDAO.addHistoryToWinner(winnerID,user1.getUser().getUsername(), user2.getUser().getUsername(), "thang");
+        String name1 = "";
+        String name2 = "";
+        if (winnerID == user1.getUser().getID()) {
+            name1 = user1.getUser().getUsername();
+            name2 = user2.getUser().getUsername();
+        } else {
+            name1 = user2.getUser().getUsername();
+            name2 = user1.getUser().getUsername();
+        }
+        historyDAO.addHistoryToWinner(winnerID,name1, name2, "thang");
 
     }
 
     public void HistoryLose(int LoserID) {
-        historyDAO.addHistoryToLoser(LoserID,user2.getUser().getUsername(), user1.getUser().getUsername(), "thua");
+
+        String name1 = "";
+        String name2 = "";
+        if (LoserID == user1.getUser().getID()) {
+            name1 = user1.getUser().getUsername();
+            name2 = user2.getUser().getUsername();
+        } else {
+            name1 = user2.getUser().getUsername();
+            name2 = user1.getUser().getUsername();
+        }
+        historyDAO.addHistoryToLoser(LoserID,name1, name2, "thua");
 
     }
 
