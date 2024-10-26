@@ -116,7 +116,7 @@ public class Room {
     }
 
     public void HistoryLose(int LoserID) {
-        historyDAO.addHistoryToLoser(LoserID,user1.getUser().getUsername(), user2.getUser().getUsername(), "thua");
+        historyDAO.addHistoryToLoser(LoserID,user2.getUser().getUsername(), user1.getUser().getUsername(), "thua");
 
     }
 
