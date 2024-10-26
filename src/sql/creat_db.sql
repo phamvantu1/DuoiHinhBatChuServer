@@ -22,3 +22,12 @@ CREATE TABLE BANNED_USER(
     ID_User int PRIMARY KEY NOT NULL,
     FOREIGN KEY (ID_User) REFERENCES `user`(ID)
 );
+
+create table history (
+                         ID int AUTO_INCREMENT PRIMARY KEY,
+                         userID int default 0,
+
+                         nameUser1 varchar(255),
+                         nameUser2 varchar(225),
+                         status varchar(255)
+);

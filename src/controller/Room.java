@@ -5,6 +5,7 @@
  */
 package controller;
 
+import dao.HistoryDAO;
 import dao.UserDAO;
 
 import java.io.IOException;
@@ -18,12 +19,14 @@ public class Room {
     private ServerThread user2;
     private String password;
     private final UserDAO userDAO;
+    private final  HistoryDAO historyDAO;
 
     public Room(ServerThread user1) {
         System.out.println("Tạo phòng thành công, ID là: " + Server.ROOM_ID);
         this.password = " ";
         this.id = Server.ROOM_ID++;
         userDAO = new UserDAO();
+        historyDAO = new HistoryDAO();
         this.user1 = user1;
         this.user2 = null;
     }
@@ -101,7 +104,22 @@ public class Room {
         userDAO.addScoreDraw(user1.getUser().getID());
         userDAO.addScoreDraw(user2.getUser().getID());
     }
-    
+
+    public void HistoryDraw() {
+        historyDAO.addHistoryToDrawer(user1.getUser().getID(),user1.getUser().getUsername(), user2.getUser().getUsername(), "hoa");
+        historyDAO.addHistoryToDrawer(user2.getUser().getID(),user1.getUser().getUsername(), user2.getUser().getUsername(), "hoa");
+    }
+
+    public void HistoryWin(int winnerID) {
+        historyDAO.addHistoryToWinner(winnerID,user1.getUser().getUsername(), user2.getUser().getUsername(), "thang");
+
+    }
+
+    public void HistoryLose(int LoserID) {
+        historyDAO.addHistoryToLoser(LoserID,user1.getUser().getUsername(), user2.getUser().getUsername(), "thua");
+
+    }
+
 
     public void increaseNumberOfDraw() {
         userDAO.addDrawGame(user1.getUser().getID());

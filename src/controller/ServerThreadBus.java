@@ -173,15 +173,15 @@ private void notifyClients(ServerThread winner, List<ServerThread> tiedPlayers) 
             if (tiedPlayers.contains(thread) && winner == null) {
                 // Gửi thông báo hòa nếu không có người thắng duy nhất
                 thread.write("user-tie," + thread.getClientNumber());
-                System.out.println("Gửi thông báo hòa đến client: " + thread.getClientNumber());
+                System.out.println("gui thong bao hoa den client : " + thread.getClientNumber());
             } else if (winner != null && thread == winner) {
                 // Gửi thông báo thắng nếu có người thắng duy nhất
                 thread.write("user-winner," + winner.getClientNumber());
-                System.out.println("Gửi thông báo thắng đến client: " + winner.getClientNumber());
+                System.out.println("gui thong bao thang den : " + winner.getClientNumber());
             } else {
                 // Gửi thông báo thua cho những người còn lại
                 thread.write("user-loser," + (winner != null ? winner.getClientNumber() : "N/A"));
-                System.out.println("Gửi thông báo thua đến client: " + thread.getClientNumber());
+                System.out.println("gui thong bao thua den : " + thread.getClientNumber());
             }
         } catch (IOException e) {
             System.err.println("Lỗi khi gửi thông báo đến client: " + thread.getClientNumber());

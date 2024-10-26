@@ -5,7 +5,9 @@
  */
 package controller;
 
+import dao.HistoryDAO;
 import dao.UserDAO;
+import model.History;
 import model.User;
 
 import java.io.*;
@@ -27,6 +29,7 @@ public class ServerThread implements Runnable {
     private final UserDAO userDAO;
     private final String clientIP;
     private int correctAnswers = -1;
+    private final HistoryDAO historyDAO ;
 
 
     public ServerThread(Socket socketOfServer, int clientNumber) {
@@ -34,6 +37,7 @@ public class ServerThread implements Runnable {
         this.clientNumber = clientNumber;
         System.out.println("Server thread number " + clientNumber + " Started");
         userDAO = new UserDAO();
+        historyDAO = new HistoryDAO();
         isClosed = false;
         room = null;
 
@@ -348,10 +352,7 @@ public class ServerThread implements Runnable {
                 if (messageSplit[0].equals("disagree-duel")) {
                     Server.serverThreadBus.sendMessageToUserID(Integer.parseInt(messageSplit[1]), message);
                 }
-                //Xử lý khi người chơi đánh 1 nước
-                if (messageSplit[0].equals("caro")) {
-                    room.getCompetitor(clientNumber).write(message);
-                }
+
                 if (messageSplit[0].equals("chat")) {
                     room.getCompetitor(clientNumber).write(message);
                 }
@@ -372,13 +373,42 @@ public class ServerThread implements Runnable {
 
                     room.boardCast("new-game,");
                 }
+
+                if (messageSplit[0].equals("win-history")) {
+                    int winnerID = this.user.getID();
+                     room.HistoryWin(winnerID);
+                }
+                if (messageSplit[0].equals("lose-history")) {
+                    int loserID = this.user.getID();
+                    room.HistoryLose(loserID);
+                }
+                if (messageSplit[0].equals("tie-history")) {
+                    room.HistoryDraw();
+                }
+
+                if (messageSplit[0].equals("view-history")) {
+                    List<History> historyList = historyDAO.getHistoryByUserID(this.user.getID());
+                    StringBuilder res = new StringBuilder("return-history,");
+                    for (History history : historyList) {
+
+                        res.append(history.getNameUser1()).append(":")
+                                .append(history.getNameUser2()).append(":")
+                                .append(history.getStatus()).append(";");
+                    }
+
+                    write(res.toString());
+                    System.out.println(res.toString());
+                }
+
+
+
                 
-//                if (messageSplit[0].equals("lose")) {
-//                    userDAO.addWinGame(room.getCompetitor(clientNumber).user.getID());
-//                    room.increaseNumberOfGame();
-//                    room.getCompetitor(clientNumber).write("competitor-time-out");
-//                    write("new-game,");
-//                }
+                if (messageSplit[0].equals("lose12")) {
+                    userDAO.addWinGame(room.getCompetitor(clientNumber).user.getID());
+                    room.increaseNumberOfGame();
+                    room.getCompetitor(clientNumber).write("competitor-time-out");
+                    write("new-game,");
+                }
                 if (messageSplit[0].equals("draw-request")) {
                     room.getCompetitor(clientNumber).write(message);
                 }
