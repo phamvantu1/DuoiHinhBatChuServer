@@ -74,7 +74,7 @@ public class ServerThreadBus {
             }
         }
          // Gửi lại danh sách người dùng online sau khi một người thoát
-        broadcastOnlineUsers();
+//        broadcastOnlineUsers();
     }
         // Phương thức lấy danh sách người dùng đang online
     public List<User> getOnlineUsers() {
@@ -88,10 +88,11 @@ public class ServerThreadBus {
     }
 
     // Gửi danh sách online đến tất cả các client
-    public void broadcastOnlineUsers() {
+    public void broadcastOnlineUsers(int userId) {
         List<User> onlineUsers = getOnlineUsers();
         StringBuilder message = new StringBuilder("online-users,");
 
+        message.append(userId).append("!");
         for (User user : onlineUsers) {
             message.append(user.getAvatar()).append(":").
                     append(user.getNickname()).append(":").

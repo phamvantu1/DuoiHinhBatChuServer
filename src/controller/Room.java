@@ -105,9 +105,12 @@ public class Room {
         userDAO.addScoreDraw(user2.getUser().getID());
     }
 
-    public void HistoryDraw() {
-        historyDAO.addHistoryToDrawer(user1.getUser().getID(),user1.getUser().getUsername(), user2.getUser().getUsername(), "hoa");
-        historyDAO.addHistoryToDrawer(user2.getUser().getID(),user1.getUser().getUsername(), user2.getUser().getUsername(), "hoa");
+    public void HistoryDraw(int DrawID) {
+        if (DrawID == user1.getUser().getID()) {
+            historyDAO.addHistoryToDrawer(user1.getUser().getID(), user1.getUser().getUsername(), user2.getUser().getUsername(), "hoa");
+        } else {
+            historyDAO.addHistoryToDrawer(user2.getUser().getID(), user1.getUser().getUsername(), user2.getUser().getUsername(), "hoa");
+        }
     }
 
     public void HistoryWin(int winnerID) {

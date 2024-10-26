@@ -157,8 +157,8 @@ public class ServerThread implements Runnable {
                     }
                 }
 
-                if (messageSplit[0].equals("check-onlien")) {
-                    Server.serverThreadBus.broadcastOnlineUsers();
+                if (messageSplit[0].equals("check-online")) {
+                    Server.serverThreadBus.broadcastOnlineUsers(this.user.getID());
                 }
 
                 // Handle correct answers
@@ -383,7 +383,7 @@ public class ServerThread implements Runnable {
                     room.HistoryLose(loserID);
                 }
                 if (messageSplit[0].equals("tie-history")) {
-                    room.HistoryDraw();
+                    room.HistoryDraw(this.user.getID());
                 }
 
                 if (messageSplit[0].equals("view-history")) {
