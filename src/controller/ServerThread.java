@@ -356,13 +356,22 @@ public class ServerThread implements Runnable {
                 if (messageSplit[0].equals("chat")) {
                     room.getCompetitor(clientNumber).write(message);
                 }
-                if (messageSplit[0].equals("win")) {
+                if (messageSplit[0].equals("win") ||  messageSplit[0].equals("win-because-stay")  ) {
                     userDAO.addWinGame(this.user.getID());
                     userDAO.addScoreWin(this.user.getID());
                     System.out.println("nguoi thang la nguoi co id" + this.user.getID());
                     room.increaseNumberOfGame();
 
                     room.boardCast("new-game,");
+                }
+
+                if (messageSplit[0].equals("client2-leave")) {
+                    String mesUserId = messageSplit[1];
+                    System.out.println("client da roi di la " + mesUserId );
+
+                      room.boardCast("win-because-leave," + mesUserId);
+                      room.boardCast("lose-because-leave," + mesUserId);
+
                 }
                 
                    if (messageSplit[0].equals("tie")) {
@@ -378,7 +387,7 @@ public class ServerThread implements Runnable {
                     int winnerID = this.user.getID();
                      room.HistoryWin(winnerID);
                 }
-                if (messageSplit[0].equals("lose-history")) {
+                if (messageSplit[0].equals("lose-history") ||  messageSplit[0].equals("lose-history-leave") ) {
                     int loserID = this.user.getID();
                     room.HistoryLose(loserID);
                 }
