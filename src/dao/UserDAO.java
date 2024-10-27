@@ -172,18 +172,19 @@ public class UserDAO extends DAO {
     public List<User> getListFriend(int ID) {
         List<User> ListFriend = new ArrayList<>();
         try {
-            PreparedStatement preparedStatement = con.prepareStatement("SELECT User.ID, User.NickName, User.IsOnline, User.IsPlaying\n"
-                    + "FROM user\n"
-                    + "WHERE User.ID IN (\n"
-                    + "	SELECT ID_User1\n"
-                    + "    FROM friend\n"
-                    + "    WHERE ID_User2 = ?\n"
-                    + ")\n"
-                    + "OR User.ID IN(\n"
-                    + "	SELECT ID_User2\n"
-                    + "    FROM friend\n"
-                    + "    WHERE ID_User1 = ?\n"
-                    + ")");
+            PreparedStatement preparedStatement = con.prepareStatement("SELECT ID, NickName, IsOnline, IsPlaying\n"
+                + "FROM user\n"
+                + "WHERE \n"
+                + "    ID IN (\n"
+                + "        SELECT ID_User1\n"
+                + "        FROM friend\n"
+                + "        WHERE ID_User2 = ?\n"
+                + "    )\n"
+                + "    OR ID IN (\n"
+                + "        SELECT ID_User2\n"
+                + "        FROM friend\n"
+                + "        WHERE ID_User1 = ?\n"
+                + "    )");
             preparedStatement.setInt(1, ID);
             preparedStatement.setInt(2, ID);
             ResultSet rs = preparedStatement.executeQuery();
