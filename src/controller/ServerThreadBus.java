@@ -40,6 +40,18 @@ public class ServerThreadBus {
         }
     }
 
+    public void boardCastALL( String message) {
+        for (ServerThread serverThread : Server.serverThreadBus.getListServerThreads()) {
+
+                try {
+                    serverThread.write(message);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+
+        }
+    }
+
     public int getLength() {
         return listServerThreads.size();
     }

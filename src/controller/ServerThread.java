@@ -257,6 +257,16 @@ public class ServerThread implements Runnable {
                     }
                     userDAO.updateToPlaying(this.user.getID());
                 }
+
+                if (messageSplit[0].equals("send-invite")) {
+                    room = new Room(this);
+                    String mesID = messageSplit[1];
+                    System.out.println("client da nhan loi moi khong phai la " + mesID );
+
+                    Server.serverThreadBus.boardCastALL( "invite-notice," + mesID);
+
+
+                }
                 //Xử lý xem danh sách phòng trống
                 if (messageSplit[0].equals("view-room-list")) {
                     StringBuilder res = new StringBuilder("room-list,");
@@ -300,7 +310,37 @@ public class ServerThread implements Runnable {
                         System.out.println("Không tìm thấy phòng, tạo phòng mới");
                     }
                 }
-                
+
+
+                if (messageSplit[0].equals("accept-invite")) {
+                    int mesID = Integer.parseInt(messageSplit[1]);
+                    Server.serverThreadBus.boardCastALL( "competitor-accept," + mesID);
+                    boolean isFinded = false;
+                    for (ServerThread serverThread : Server.serverThreadBus.getListServerThreads()) {
+                        if (serverThread.room != null && serverThread.room.getNumberOfUser() == 1 && serverThread.room.getPassword().equals(" ")) {
+                            serverThread.room.setUser2(this);
+                            this.room = serverThread.room;
+                            room.increaseNumberOfGame();
+                            System.out.println("Đã vào phòng " + room.getId());
+                            goToPartnerRoom();
+                            userDAO.updateToPlaying(this.user.getID());
+                            isFinded = true;
+                            //Xử lý phần mời cả 2 người chơi vào phòng
+                            break;
+                        }
+                    }
+
+                    if (!isFinded) {
+                        this.room = new Room(this);
+                        userDAO.updateToPlaying(this.user.getID());
+                        System.out.println("Không tìm thấy phòng, tạo phòng mới");
+                    }
+                }
+
+
+
+
+
                 //Xử lý không tìm được phòng
                 if (messageSplit[0].equals("cancel-room")) {
                     userDAO.updateToNotPlaying(this.user.getID());
@@ -429,9 +469,7 @@ public class ServerThread implements Runnable {
                 if (messageSplit[0].equals("draw-refuse")) {
                     room.getCompetitor(clientNumber).write("draw-refuse,");
                 }
-                if (messageSplit[0].equals("voice-message")) {
-                    room.getCompetitor(clientNumber).write(message);
-                }
+
                 if (messageSplit[0].equals("left-room")) {
                     if (room != null) {
                         room.setUsersToNotPlaying();
