@@ -109,7 +109,7 @@ public class Room {
         if (DrawID == user1.getUser().getID()) {
             historyDAO.addHistoryToDrawer(user1.getUser().getID(), user1.getUser().getUsername(), user2.getUser().getUsername(), "hoa");
         } else {
-            historyDAO.addHistoryToDrawer(user2.getUser().getID(), user1.getUser().getUsername(), user2.getUser().getUsername(), "hoa");
+            historyDAO.addHistoryToDrawer(user2.getUser().getID(), user2.getUser().getUsername(), user1.getUser().getUsername(), "hoa");
         }
     }
 
