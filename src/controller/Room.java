@@ -92,10 +92,11 @@ public class Room {
 //    }
 //
 //
-//    public void increaseNumberOfGame() {
-//        userDAO.addGame(user1.getUser().getID());
-//        userDAO.addGame(user2.getUser().getID());
-//    }
+    public void increaseNumberOfGame() {
+        user1.getUser().setNumberOfGame(user1.getUser().getNumberOfGame() + 1);
+        user2.getUser().setNumberOfGame(user2.getUser().getNumberOfGame() + 1);
+
+    }
 //
 //     public void DrawOfGame() {
 //        userDAO.addScoreDraw(user1.getUser().getID());
