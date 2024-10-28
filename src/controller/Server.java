@@ -37,13 +37,6 @@ public class Server {
             e.printStackTrace();
             System.exit(1);
         }
-//        ThreadPoolExecutor executor = new ThreadPoolExecutor(
-//                10,
-//                100,
-//                10,
-//                TimeUnit.SECONDS,
-//                new ArrayBlockingQueue<>(8)
-//        );
 
         ThreadPoolExecutor executor = new ThreadPoolExecutor(
         10,  // Số thread tối thiểu (core pool size)

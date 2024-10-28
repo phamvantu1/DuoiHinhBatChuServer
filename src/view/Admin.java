@@ -5,7 +5,7 @@
  */
 package view;
 
-import dao.UserDAO;
+
 
 import javax.swing.JOptionPane;
 
@@ -18,7 +18,7 @@ import controller.ServerThread;
  * @author Admin
  */
 public class Admin extends javax.swing.JFrame implements Runnable {
-    private final UserDAO userDAO;
+
 
     /**
      * Creates new form Admin
@@ -30,7 +30,7 @@ public class Admin extends javax.swing.JFrame implements Runnable {
         this.setLocationRelativeTo(null);
         threadRoomListView.setEditable(false);
         messageView.setEditable(false);
-        userDAO = new UserDAO();
+
     }
 
     /**
@@ -271,15 +271,15 @@ public class Admin extends javax.swing.JFrame implements Runnable {
             int userId = Integer.parseInt(userIdTextField.getText());
             User user = new User();
             user.setID(userId);
-            userDAO.updateBannedStatus(user, true);
+
             ServerThread serverThread = Server.serverThreadBus.getServerThreadByUserID(userId);
             serverThread.write("banned-notice," + reasonComboBox.getSelectedItem());
             if (serverThread.getRoom() != null) {
                 Room room = serverThread.getRoom();
                 ServerThread competitorThread = room.getCompetitor(serverThread.getClientNumber());
-                room.setUsersToNotPlaying();
+
                 if (competitorThread != null) {
-                    room.decreaseNumberOfGame();
+
                     competitorThread.write("left-room,");
                     competitorThread.setRoom(null);
                 }
@@ -303,7 +303,7 @@ public class Admin extends javax.swing.JFrame implements Runnable {
             int userId = Integer.parseInt(userIdTextField.getText());
             User user = new User();
             user.setID(userId);
-            userDAO.updateBannedStatus(user, false);
+
             userIdTextField.setText("");
             JOptionPane.showMessageDialog(rootPane, "Đã huỷ BAN user " + userId);
         } catch (Exception e) {

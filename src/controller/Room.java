@@ -5,8 +5,7 @@
  */
 package controller;
 
-import dao.HistoryDAO;
-import dao.UserDAO;
+
 
 import java.io.IOException;
 
@@ -18,15 +17,13 @@ public class Room {
     private final ServerThread user1;
     private ServerThread user2;
     private String password;
-    private final UserDAO userDAO;
-    private final  HistoryDAO historyDAO;
+
 
     public Room(ServerThread user1) {
         System.out.println("Tạo phòng thành công, ID là: " + Server.ROOM_ID);
         this.password = " ";
         this.id = Server.ROOM_ID++;
-        userDAO = new UserDAO();
-        historyDAO = new HistoryDAO();
+
         this.user1 = user1;
         this.user2 = null;
     }
@@ -79,79 +76,79 @@ public class Room {
             return user2;
         return user1;
     }
-
-    public void setUsersToPlaying() {
-        userDAO.updateToPlaying(user1.getUser().getID());
-        if (user2 != null) {
-            userDAO.updateToPlaying(user2.getUser().getID());
-        }
-    }
-
-    public void setUsersToNotPlaying() {
-        userDAO.updateToNotPlaying(user1.getUser().getID());
-        if (user2 != null) {
-            userDAO.updateToNotPlaying(user2.getUser().getID());
-        }
-    }
-
-
-    public void increaseNumberOfGame() {
-        userDAO.addGame(user1.getUser().getID());
-        userDAO.addGame(user2.getUser().getID());
-    }
-    
-     public void DrawOfGame() {
-        userDAO.addScoreDraw(user1.getUser().getID());
-        userDAO.addScoreDraw(user2.getUser().getID());
-    }
-
-    public void HistoryDraw(int DrawID) {
-        if (DrawID == user1.getUser().getID()) {
-            historyDAO.addHistoryToDrawer(user1.getUser().getID(), user1.getUser().getUsername(), user2.getUser().getUsername(), "hoa");
-        } else {
-            historyDAO.addHistoryToDrawer(user2.getUser().getID(), user2.getUser().getUsername(), user1.getUser().getUsername(), "hoa");
-        }
-    }
-
-    public void HistoryWin(int winnerID) {
-        String name1 = "";
-        String name2 = "";
-        if (winnerID == user1.getUser().getID()) {
-            name1 = user1.getUser().getUsername();
-            name2 = user2.getUser().getUsername();
-        } else {
-            name1 = user2.getUser().getUsername();
-            name2 = user1.getUser().getUsername();
-        }
-        historyDAO.addHistoryToWinner(winnerID,name1, name2, "thang");
-
-    }
-
-    public void HistoryLose(int LoserID) {
-
-        String name1 = "";
-        String name2 = "";
-        if (LoserID == user1.getUser().getID()) {
-            name1 = user1.getUser().getUsername();
-            name2 = user2.getUser().getUsername();
-        } else {
-            name1 = user2.getUser().getUsername();
-            name2 = user1.getUser().getUsername();
-        }
-        historyDAO.addHistoryToLoser(LoserID,name1, name2, "thua");
-
-    }
-
-
-    public void increaseNumberOfDraw() {
-        userDAO.addDrawGame(user1.getUser().getID());
-        userDAO.addDrawGame(user2.getUser().getID());
-    }
-
-    public void decreaseNumberOfGame() {
-        userDAO.decreaseGame(user1.getUser().getID());
-        userDAO.decreaseGame(user2.getUser().getID());
-    }
+//
+//    public void setUsersToPlaying() {
+//        userDAO.updateToPlaying(user1.getUser().getID());
+//        if (user2 != null) {
+//            userDAO.updateToPlaying(user2.getUser().getID());
+//        }
+//    }
+//
+//    public void setUsersToNotPlaying() {
+//        userDAO.updateToNotPlaying(user1.getUser().getID());
+//        if (user2 != null) {
+//            userDAO.updateToNotPlaying(user2.getUser().getID());
+//        }
+//    }
+//
+//
+//    public void increaseNumberOfGame() {
+//        userDAO.addGame(user1.getUser().getID());
+//        userDAO.addGame(user2.getUser().getID());
+//    }
+//
+//     public void DrawOfGame() {
+//        userDAO.addScoreDraw(user1.getUser().getID());
+//        userDAO.addScoreDraw(user2.getUser().getID());
+//    }
+//
+//    public void HistoryDraw(int DrawID) {
+//        if (DrawID == user1.getUser().getID()) {
+//            historyDAO.addHistoryToDrawer(user1.getUser().getID(), user1.getUser().getUsername(), user2.getUser().getUsername(), "hoa");
+//        } else {
+//            historyDAO.addHistoryToDrawer(user2.getUser().getID(), user2.getUser().getUsername(), user1.getUser().getUsername(), "hoa");
+//        }
+//    }
+//
+//    public void HistoryWin(int winnerID) {
+//        String name1 = "";
+//        String name2 = "";
+//        if (winnerID == user1.getUser().getID()) {
+//            name1 = user1.getUser().getUsername();
+//            name2 = user2.getUser().getUsername();
+//        } else {
+//            name1 = user2.getUser().getUsername();
+//            name2 = user1.getUser().getUsername();
+//        }
+//        historyDAO.addHistoryToWinner(winnerID,name1, name2, "thang");
+//
+//    }
+//
+//    public void HistoryLose(int LoserID) {
+//
+//        String name1 = "";
+//        String name2 = "";
+//        if (LoserID == user1.getUser().getID()) {
+//            name1 = user1.getUser().getUsername();
+//            name2 = user2.getUser().getUsername();
+//        } else {
+//            name1 = user2.getUser().getUsername();
+//            name2 = user1.getUser().getUsername();
+//        }
+//        historyDAO.addHistoryToLoser(LoserID,name1, name2, "thua");
+//
+//    }
+//
+//
+//    public void increaseNumberOfDraw() {
+//        userDAO.addDrawGame(user1.getUser().getID());
+//        userDAO.addDrawGame(user2.getUser().getID());
+//    }
+//
+//    public void decreaseNumberOfGame() {
+//        userDAO.decreaseGame(user1.getUser().getID());
+//        userDAO.decreaseGame(user2.getUser().getID());
+//    }
 
 
 }
