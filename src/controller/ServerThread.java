@@ -413,6 +413,15 @@ public class ServerThread implements Runnable {
                       room.boardCast("lose-because-leave," + mesUserId);
 
                 }
+                if (messageSplit[0].equals("want-to-answer")) {
+
+                    int mesId  = Integer.parseInt(messageSplit[1]);
+                    System.out.println("id cua nguoi muon tra loi la " + mesId);
+                    Server.serverThreadBus.boardCastALL("accept-to-answer," + mesId );
+                }
+
+
+
                 
                    if (messageSplit[0].equals("tie")) {
                        System.out.println("nguoi hoa la nguoi co id" + this.user.getID());
